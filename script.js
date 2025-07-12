@@ -1,5 +1,3 @@
-const { use } = require("react");
-
 console.log("Hello, World!");
 function getComputerChoice() {
   const randomChoice = Math.random();
@@ -13,3 +11,15 @@ function getComputerChoice() {
 }
 
 console.log(getComputerChoice());
+
+function getHumanChoice() {
+  const choices = prompt("Enter your choice: rock, paper, or scissors");
+  if (choices === "rock" || choices === "paper" || choices === "scissors") {
+    return choices;
+  } else {
+    console.log("Invalid choice, please try again.");
+    return getHumanChoice();
+  }
+}
+
+console.log(getHumanChoice());
