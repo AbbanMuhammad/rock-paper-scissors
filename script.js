@@ -26,3 +26,5 @@ console.log(getHumanChoice());
 
 const humanScore = 0;
 const computerScore = 0;
+
+function playRound(humanChoice, computerChoice) {}
