@@ -1,4 +1,5 @@
-console.log("Hello, World!");
+console.log("Hello, World!. Welcome to the Rock, Paper, Scissors game!");
+
 function getComputerChoice() {
   const randomChoice = Math.random();
   if (randomChoice < 1 / 3) {
@@ -9,9 +10,9 @@ function getComputerChoice() {
     return "scissors";
   }
 }
-
 console.log(getComputerChoice());
 
+// step 3: Write the logic to get the human choice
 function getHumanChoice() {
   const choices = prompt("Enter your choice: rock, paper, or scissors");
   if (choices === "rock" || choices === "paper" || choices === "scissors") {
