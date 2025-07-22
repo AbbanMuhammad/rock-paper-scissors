@@ -15,19 +15,23 @@ console.log(getComputerChoice());
 // step 3: Write the logic to get the human choice
 function getHumanChoice() {
   const choices = prompt("Enter your choice: rock, paper, or scissors");
-  if (choices === "rock" || choices === "paper" || choices === "scissors") {
-    return choices;
+  const validChoices = ["rock", "paper", "scissors"];
+
+  if (validChoices.includes(choices.toLowerCase())) {
+    return choices.toLowerCase();
   } else {
     console.log("Invalid choice, please try again.");
-    return getHumanChoice();
+    return getHumanChoice(); // ask again if input is invalid
   }
 }
 
 console.log(getHumanChoice());
 
+//step 4:  Declare the players score variables
 let humanScore = 0;
 let computerScore = 0;
 
+// step 5: Write the logic to play a single round
 function playRound(humanChoice, computerChoice) {
   const player = humanChoice.toLowerCase();
   const computer = computerChoice.toLowerCase();
