@@ -3,50 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-      }
-      button {
-        margin: 5px;
-        padding: 10px 15px;
-        font-size: 16px;
-      }
-      #history {
-        margin-top: 15px;
-        border-top: 1px solid #ccc;
-        padding-top: 10px;
-      }
-      .round-log {
-        margin: 3px 0;
-      }
-      #winner {
-        font-weight: bold;
-        margin-top: 10px;
-        font-size: 18px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
     <title>Rock Paper Scissors</title>
   </head>
   <body>
-    <script src="script.js"></script>
-    <!-- Player selection buttons -->
+    <h1>Rock Paper Scissors</h1>
+
+    <!-- Buttons for player choices -->
     <button id="rock">Rock</button>
     <button id="paper">Paper</button>
     <button id="scissors">Scissors</button>
+    <button id="restart" style="display: none">Restart Game</button>
 
-    <!-- Game output areas -->
-    <div id="results"></div>
-    <div id="score"></div>
-    <div id="leader"></div>
-    <!-- New line for showing current leader -->
-    <div id="winner"></div>
+    <!-- Scoreboard -->
+    <p id="result"></p>
+    <p>Player Score: <span id="playerScore">0</span></p>
+    <p>Computer Score: <span id="computerScore">0</span></p>
 
-    <!-- Match history log -->
-    <div id="history">
-      <h3>Match History</h3>
-      <div id="historyLog"></div>
-    </div>
+    <script>
+      // Initialize scores
+      let playerScore = 0;
+      let computerScore = 0;
+
+      // Function to get computer's random choice
+      function computerPlay() {
+        const choices = ["rock", "paper", "scissors"];
+        return choices[Math.floor(Math.random() * choices.length)];
+      }
+
+      // Function to play a single round
+      function playRound(playerSelection) {
+        if (playerScore >= 5 || computerScore >= 5) return; // Stop if game over
+
+        const computerSelection = computerPlay();
+        let roundResult = "";
+
+        if (playerSelection === computerSelection) {
+          roundResult = `It's a tie! You both chose ${playerSelection}`;
+        } else if (
+          (playerSelection === "rock" && computerSelection === "scissors") ||
+          (playerSelection === "paper" && computerSelection === "rock") ||
+          (playerSelection === "scissors" && computerSelection === "paper")
+        ) {
+          playerScore++;
+          roundResult = `You win! ${playerSelection} beats ${computerSelection}`;
+        } else {
+          computerScore++;
+          roundResult = `You lose! ${computerSelection} beats ${playerSelection}`;
+        }
+
+        // Update scoreboard
+        document.getElementById("result").textContent = roundResult;
+        document.getElementById("playerScore").textContent = playerScore;
+        document.getElementById("computerScore").textContent = computerScore;
+
+        // Check for game over
+        if (playerScore === 5 || computerScore === 5) {
+          let finalMessage =
+            playerScore === 5
+              ? "🎉 You won the game!"
+              : "💻 Computer won the game!";
+          document.getElementById("result").textContent = finalMessage;
+          document.getElementById("restart").style.display = "inline"; // Show restart button
+        }
+      }
+
+      // Event listeners for buttons
+      document
+        .getElementById("rock")
+        .addEventListener("click", () => playRound("rock"));
+      document
+        .getElementById("paper")
+        .addEventListener("click", () => playRound("paper"));
+      document
+        .getElementById("scissors")
+        .addEventListener("click", () => playRound("scissors"));
+
+      // Restart game
+      document.getElementById("restart").addEventListener("click", () => {
+        playerScore = 0;
+        computerScore = 0;
+        document.getElementById("playerScore").textContent = playerScore;
+        document.getElementById("computerScore").textContent = computerScore;
+        document.getElementById("result").textContent = "";
+        document.getElementById("restart").style.display = "none";
+      });
+    </script>
   </body>
 </html>
