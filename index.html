@@ -3,9 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Rock Paper Scissors</title>
   </head>
   <body>
-    <script src="script.js"></script>
+    <h1>Rock Paper Scissors</h1>
+
+    <!-- Buttons for player choices -->
+    <button id="rock">Rock</button>
+    <button id="paper">Paper</button>
+    <button id="scissors">Scissors</button>
+    <button id="restart" style="display: none">Restart Game</button>
+
+    <!-- Scoreboard -->
+    <p id="result"></p>
+    <p>Player Score: <span id="playerScore">0</span></p>
+    <p>Computer Score: <span id="computerScore">0</span></p>
+
+    <script>
+      // Initialize scores
+      let playerScore = 0;
+      let computerScore = 0;
+
+      // Function to get computer's random choice
+      function computerPlay() {
+        const choices = ["rock", "paper", "scissors"];
+        return choices[Math.floor(Math.random() * choices.length)];
+      }
+
+      // Function to play a single round
+      function playRound(playerSelection) {
+        if (playerScore >= 5 || computerScore >= 5) return; // Stop if game over
+
+        const computerSelection = computerPlay();
+        let roundResult = "";
+
+        if (playerSelection === computerSelection) {
+          roundResult = `It's a tie! You both chose ${playerSelection}`;
+        } else if (
+          (playerSelection === "rock" && computerSelection === "scissors") ||
+          (playerSelection === "paper" && computerSelection === "rock") ||
+          (playerSelection === "scissors" && computerSelection === "paper")
+        ) {
+          playerScore++;
+          roundResult = `You win! ${playerSelection} beats ${computerSelection}`;
+        } else {
+          computerScore++;
+          roundResult = `You lose! ${computerSelection} beats ${playerSelection}`;
+        }
+
+        // Update scoreboard
+        document.getElementById("result").textContent = roundResult;
+        document.getElementById("playerScore").textContent = playerScore;
+        document.getElementById("computerScore").textContent = computerScore;
+
+        // Check for game over
+        if (playerScore === 5 || computerScore === 5) {
+          let finalMessage =
+            playerScore === 5
+              ? "🎉 You won the game!"
+              : "💻 Computer won the game!";
+          document.getElementById("result").textContent = finalMessage;
+          document.getElementById("restart").style.display = "inline"; // Show restart button
+        }
+      }
+
+      // Event listeners for buttons
+      document
+        .getElementById("rock")
+        .addEventListener("click", () => playRound("rock"));
+      document
+        .getElementById("paper")
+        .addEventListener("click", () => playRound("paper"));
+      document
+        .getElementById("scissors")
+        .addEventListener("click", () => playRound("scissors"));
+
+      // Restart game
+      document.getElementById("restart").addEventListener("click", () => {
+        playerScore = 0;
+        computerScore = 0;
+        document.getElementById("playerScore").textContent = playerScore;
+        document.getElementById("computerScore").textContent = computerScore;
+        document.getElementById("result").textContent = "";
+        document.getElementById("restart").style.display = "none";
+      });
+    </script>
   </body>
 </html>

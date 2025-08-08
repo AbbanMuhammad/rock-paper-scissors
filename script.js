@@ -1,92 +1,75 @@
-console.log("Hello, World!. Welcome to the Rock, Paper, Scissors game!");
-
-function getComputerChoice() {
-  const randomChoice = Math.random();
-  if (randomChoice < 1 / 3) {
-    return "rock";
-  } else if (randomChoice < 2 / 3) {
-    return "paper";
-  } else {
-    return "scissors";
-  }
-}
-console.log(getComputerChoice());
-
-// step 3: Write the logic to get the human choice
-function getHumanChoice() {
-  const choices = prompt("Enter your choice: rock, paper, or scissors");
-  const validChoices = ["rock", "paper", "scissors"];
-
-  if (validChoices.includes(choices.toLowerCase())) {
-    return choices.toLowerCase();
-  } else {
-    console.log("Invalid choice, please try again.");
-    return getHumanChoice(); // ask again if input is invalid
-  }
-}
-
-console.log(getHumanChoice());
-
-//step 4:  Declare the players score variables
-let humanScore = 0;
+// Track scores
+let playerScore = 0;
 let computerScore = 0;
+const winningScore = 5;
 
-// step 5: Write the logic to play a single round
-function playRound(humanChoice, computerChoice) {
-  const player = humanChoice.toLowerCase();
-  const computer = computerChoice.toLowerCase();
+// DOM elements
+const resultsDiv = document.getElementById("results");
+const scoreDiv = document.getElementById("score");
+const restartBtn = document.getElementById("restart");
 
-  console.log(`You chose: ${humanChoice}`);
-  console.log(`Computer chose: ${computerChoice}`);
+// Computer randomly chooses Rock, Paper, or Scissors
+function computerPlay() {
+  const choices = ["rock", "paper", "scissors"];
+  const randomIndex = Math.floor(Math.random() * choices.length);
+  return choices[randomIndex];
+}
 
-  if (humanChoice === computerChoice) {
-    console.log("It's a tie!");
+// Play a single round
+function playRound(playerSelection) {
+  // If the game already ended, don't play
+  if (playerScore >= winningScore || computerScore >= winningScore) {
+    return;
+  }
+
+  const computerSelection = computerPlay();
+  let result = "";
+
+  // Determine round winner
+  if (playerSelection === computerSelection) {
+    result = `It's a tie! You both chose ${playerSelection}.`;
   } else if (
-    (humanChoice === "rock" && computerChoice === "scissors") ||
-    (humanChoice === "scissors" && computerChoice === "paper") ||
-    (humanChoice === "paper" && computerChoice === "rock")
+    (playerSelection === "rock" && computerSelection === "scissors") ||
+    (playerSelection === "paper" && computerSelection === "rock") ||
+    (playerSelection === "scissors" && computerSelection === "paper")
   ) {
-    humanScore++;
-    console.log(
-      `You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}.`
-    );
+    playerScore++;
+    result = `You win this round! ${playerSelection} beats ${computerSelection}.`;
   } else {
     computerScore++;
-    console.log(
-      `You lose! ${capitalize(computerChoice)} beats ${capitalize(
-        humanChoice
-      )}.`
-    );
+    result = `You lose this round! ${computerSelection} beats ${playerSelection}.`;
   }
 
-  console.log(`Score: You ${humanScore} - Computer ${computerScore}`);
-  console.log("-----");
+  // Display result and score
+  resultsDiv.textContent = result;
+  scoreDiv.textContent = `Player: ${playerScore} - Computer: ${computerScore}`;
+
+  // Check for game over
+  if (playerScore === winningScore) {
+    resultsDiv.textContent = "🎉 You win the game!";
+  } else if (computerScore === winningScore) {
+    resultsDiv.textContent = "💻 Computer wins the game!";
+  }
 }
 
-function capitalize(word) {
-  return word.charAt(0).toUpperCase() + word.slice(1);
-}
-
-// step 6:Write the logic to play the entire game
-function playGame() {
-  humanScore = 0;
+// Restart game
+function restartGame() {
+  playerScore = 0;
   computerScore = 0;
-  console.log("Starting a 5-round game!");
-
-  for (let i = 1; i <= 5; i++) {
-    console.log(`Round ${i}:`);
-    playRound(getHumanChoice(), getComputerChoice());
-  }
-
-  console.log("Game Over!");
-  if (humanScore > computerScore) {
-    console.log("You are the overall winner!");
-  } else if (computerScore > humanScore) {
-    console.log("Computer wins overall!");
-  } else {
-    console.log("The game is a tie!");
-  }
+  resultsDiv.textContent = "";
+  scoreDiv.textContent = "";
 }
 
-// Start the game
-playGame();
+// Event listeners for choice buttons
+document
+  .getElementById("rock")
+  .addEventListener("click", () => playRound("rock"));
+document
+  .getElementById("paper")
+  .addEventListener("click", () => playRound("paper"));
+document
+  .getElementById("scissors")
+  .addEventListener("click", () => playRound("scissors"));
+
+// Event listener for restart button
+restartBtn.addEventListener("click", restartGame);
